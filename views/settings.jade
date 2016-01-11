@@ -30,9 +30,9 @@ html(lang="en-us")
             ul.nav.navbar-nav
               li
                 a(href="/") Home
-              li.active
-                a(href="/index") Результаты
               li
+                a(href="/index") Результаты
+              li.active
                 a(href="/settings") Настройки
               li
                 a(href="/params") Параметры
@@ -40,24 +40,15 @@ html(lang="en-us")
                 a(href="/customers") Customers
 
         .heading
-          h3 Регламентные задания
+          h3 Настройки регламентных заданий
         .row
           aside.col-md-6
             ul.list-group.submenu
-                    li.list-group-item Выгрузка в 23:00
-                    li.list-group-item
-                      a(href="/donec") Инициализация
-                    li.list-group-item.active
-                      a(href="/vestibulum/") Выгрузка рабочих ИБ
-                    li.list-group-item
-                      a(href="/etiam/") Применение изменений
-                    li.list-group-item
-                      a(href="/phasellus/") Загрузка
-                    li.list-group-item
-                      a(href="/cras/") Перезагрузка серверов
-                    li.list-group-item
-                      a(href="/cras/") Передача файлов на ftp
-
+              //
+              li.list-group-item Выгрузка в 23:00
+              li.list-group-item
+                a(href="/donec") Инициализация
+ 
           section.col-md-18
             .jubmotron
               blockquote

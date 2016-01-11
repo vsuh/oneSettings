@@ -1,9 +1,0 @@
-﻿doctype html
-html
-  head
-  block head
-      body
-        block content
-        block footer
-          #footer
-            p somer footer content

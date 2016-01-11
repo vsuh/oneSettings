@@ -9,8 +9,24 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-module.exports = router;
 
+router.get('/settings', function(req, res, next) {
+  res.render('settings', { title: 'Express' });
+});
+
+
+router.get('/params', function(req, res, next) {
+  res.render('params', { title: 'Express' });
+});
+
+
+router.get('/customers', function(req, res, next) {
+  res.render('customers', { title: 'Express' });
+});
+
+
+module.exports = router;
+//// *** *** *** ////
 function dump_rows(cmd)
 {
    cmd.addListener('row', function(r) { console.dir(r); } );
