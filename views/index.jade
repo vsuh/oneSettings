@@ -1,9 +1,75 @@
-﻿doctype html
-html
+html(lang="en-us")
   head
-    block append head
-      body
-        block content
-        block footer
-          #footer
-            p some footer content
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=Edge;chrome=1")
+    title Управление регламентными заданиями
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", media="screen", href="css/bootstrap.min.css")
+    link(rel="stylesheet", media="screen", href="css/bootstrap-theme.css.map")
+    link(rel="stylesheet", media="screen", href="css/styles.css")
+
+    |  <!--[if lt IE 9]>
+    |		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    |		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    |	<![endif]-->
+
+    script(src="http://code.jquery.com/jquery-1.12.0.min.js")
+
+    body
+      .wrapper.container
+        header
+          a(href="/")
+            img(src="images/logo-vscraft.png", alt="MC1CControl logo")
+          form.form-inline.form-search.pull-right(name="search", action="#", method="get")
+            .input-group
+              label.sr-only(for="searchInput") Search
+              input.form-control#searchInput(type="text", name="search", placeholder="Search")
+              div.input-group-btn
+                button.btn.btn-primary(type="submit") G0
+          nav.navbar.navbar-default
+            ul.nav.navbar-nav
+              li
+                a(href="/") Home
+              li.active
+                a(href="/protocols") Результаты
+              li
+                a(href="/settings") Настройки
+              li
+                a(href="/params") Параметры
+              li
+                a(href="/customers") Customers
+
+        .heading
+          h3 Регламентные задания
+        .row
+          aside.col-md-7
+            ul.list-group.submenu
+                    li.list-group-item Выгрузка в 23:00
+                    li.list-group-item
+                      a(href="/donec") Инициализация
+                    li.list-group-item.active
+                      a(href="/vestibulum/") Выгрузка рабочих ИБ
+                    li.list-group-item
+                      a(href="/etiam/") Применение изменений
+                    li.list-group-item
+                      a(href="/phasellus/") Загрузка
+                    li.list-group-item
+                      a(href="/cras/") Перезагрузка серверов
+                    li.list-group-item
+                      a(href="/cras/") Передача файлов на ftp
+
+          section.col-md-17
+            .jubmotron
+              blockquote
+                p “Quisque in enim velit, at dignissim est. nulla ul corper, dolor ac pellentesque placerat, justo tellus gravida erat, vel porttitor libero erat.”
+                  small John Doe, Lorem Ipsum
+      footer
+        .container
+          .row
+            .col-md-21.spacer  &nbsp;
+            .col-md-3.copy-right
+              h3 Copyright
+              p VSCraft 2016
+
+
+

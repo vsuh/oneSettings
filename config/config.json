@@ -1,23 +1,20 @@
 {
-	"port": 3000,
-    "db": {
-        "connection": "mongodb://localhost",
-        "name": "db_name",
-        "options": {
-            "server": {
-                "socketOptions": {
-                    "keepAlive": 1
-                }
-            }
-        }
+    "port": 3000,
+    "server": "kopt-app-01",
+    "w_ib": [
+        "mc_bnu",
+        "zupCorp",
+        "mc_uat"
+    ],
+    "k_ibs": {
+        "mc_bnu_tst": "mc_bnu",
+        "mc_bnu_pom": "mc_bnu",
+        "corp_kzp": "zupCorp",
+        "mc_uat_tst": "mc_uat"
     },
-    "session": {
-        "secret": "secret_key",
-        "key": "cid",
-        "cookie": {
-            "path": "/",
-            "httpOnly": true,
-            "maxAge": null
-        }
+    "my": {
+        "server": "mysql",
+        "user": "db_name",
+        "passwd": "G0bl1n76"
     }
 }
