@@ -10,6 +10,7 @@
     "express": "^4.13.3",
     "jade": "~1.11.0",
     "logger": "0.0.1",
+    "markdown-js": "0.0.3",
     "morgan": "~1.6.1",
     "mysql-native": "^0.4.7",
     "nconf": "^0.8.2",

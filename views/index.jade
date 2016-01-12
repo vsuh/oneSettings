@@ -14,67 +14,97 @@ html(lang="en-us")
     |	<![endif]-->
 
     script(src="http://code.jquery.com/jquery-1.12.0.min.js")
-
+    
     body
-      .wrapper.container
-        header
-          a(href="/")
-            img(src="images/logo-vscraft.png", alt="MC1CControl logo")
-          form.form-inline.form-search.pull-right(name="search", action="#", method="get")
-            .input-group
-              label.sr-only(for="searchInput") Search
-              input.form-control#searchInput(type="text", name="search", placeholder="Search")
-              div.input-group-btn
-                button.btn.btn-primary(type="submit") G0
-          nav.navbar.navbar-default
-            ul.nav.navbar-nav
-              li
-                a(href="/") Home
-              li.active
-                a(href="/index") Результаты
-              li
-                a(href="/settings") Настройки
-              li
-                a(href="/params") Параметры
-              li
-                a(href="/customers") Customers
+     :markdown
+       p # Markdown
+        .wrapper.container
+            header
+            a(href="/")
+                img(src="images/logo-vscraft.png", alt="MC1CControl logo")
+            form.form-inline.form-search.pull-right(name="search", action="#", method="get")
+                .input-group
+                label.sr-only(for="searchInput") Search
+                input.form-control#searchInput(type="text", name="search", placeholder="Search")
+                div.input-group-btn
+                    button.btn.btn-primary(type="submit") G0
+            nav.navbar.navbar-default
+                ul.nav.navbar-nav
+                li
+                    a(href="/") Home
+                li.active
+                    a(href="/index") Результаты
+                li
+                    a(href="/settings") Настройки
+                li
+                    a(href="/params") Параметры
+                li
+                    a(href="/customers") Customers
 
-        .heading
-          - if (stage)
-            h3 Регламентные задания. Фаза #{stage}
-          - else
-            h3 Регламентные задания
-        .row
-          aside.col-md-6
-            ul.list-group.submenu
-                    li.list-group-item
-                      a(href="/index?ws=1") Выгрузка в 23:00
-                    li.list-group-item
-                      a(href="/index?ws=2") Инициализация
+            .heading
+            - if (stage)
+                h3 Регламентные задания. Фаза #{stage}
+            - else
+                h3 Регламентные задания
+            .row
+            aside.col-md-6
+                ul.list-group.submenu
+                - if(stage == '1')
                     li.list-group-item.active
-                      a(href="/index?ws=3") Выгрузка рабочих ИБ
+                    a(href="/index?ws=1") Выгрузка в 23:00
+                - else
                     li.list-group-item
-                      a(href="/index?ws=4") Применение изменений
+                    a(href="/index?ws=1") Выгрузка в 23:00
+                - if(stage == '2')
+                    li.list-group-item.active
+                    a(href="/index?ws=2") Инициализация
+                - else
                     li.list-group-item
-                      a(href="/index?ws=5") Загрузка
+                    a(href="/index?ws=2") Инициализация
+                - if(stage == '3')
+                    li.list-group-item.active
+                    a(href="/index?ws=3") Выгрузка рабочих ИБ
+                - else
                     li.list-group-item
-                      a(href="/index?ws=6") Перезагрузка серверов
+                    a(href="/index?ws=3") Выгрузка рабочих ИБ
+                - if(stage == '4')
+                    li.list-group-item.active
+                    a(href="/index?ws=4") Применение изменений
+                - else
                     li.list-group-item
-                      a(href="/index?ws=7") Передача файлов на ftp
+                    a(href="/index?ws=4") Применение изменений
+                - if(stage == '5')
+                    li.list-group-item.active
+                    a(href="/index?ws=5") Загрузка
+                - else
+                    li.list-group-item
+                    a(href="/index?ws=5") Загрузка
+                - if(stage == '6')
+                    li.list-group-item.active
+                    a(href="/index?ws=6") Перезагрузка серверов
+                - else
+                    li.list-group-item
+                    a(href="/index?ws=6") Перезагрузка серверов
+                - if(stage == '7')
+                    li.list-group-item.active
+                    a(href="/index?ws=7") Передача файлов на ftp
+                - else
+                    li.list-group-item
+                    a(href="/index?ws=7") Передача файлов на ftp
 
-          section.col-md-18
-            .jubmotron
-              blockquote
-                table()
-                  - if (content.length)
-                    - content.forEach(function(item){
-                      tr
-                        - if (item.length)
-                          - item.forEach(function(tx){
-                            td
-                              small= tx
-                          - })
-                    - })
+            section.col-md-18
+                .jubmotron
+                blockquote
+                    table()
+                    - if (content.length)
+                        - content.forEach(function(item){
+                        tr(valign="top")
+                            - if (item.length)
+                            - item.forEach(function(tx){
+                                td
+                                    small!= tx
+                            - })
+                        - })
 
 
 
