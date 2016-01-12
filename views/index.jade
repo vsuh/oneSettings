@@ -40,36 +40,42 @@ html(lang="en-us")
                 a(href="/customers") Customers
 
         .heading
-          h3 Регламентные задания
+          - if (stage)
+            h3 Регламентные задания. Фаза #{stage}
+          - else
+            h3 Регламентные задания
         .row
           aside.col-md-6
             ul.list-group.submenu
-                    li.list-group-item Выгрузка в 23:00
                     li.list-group-item
-                      a(href="/donec") Инициализация
+                      a(href="/index?ws=1") Выгрузка в 23:00
+                    li.list-group-item
+                      a(href="/index?ws=2") Инициализация
                     li.list-group-item.active
-                      a(href="/vestibulum/") Выгрузка рабочих ИБ
+                      a(href="/index?ws=3") Выгрузка рабочих ИБ
                     li.list-group-item
-                      a(href="/etiam/") Применение изменений
+                      a(href="/index?ws=4") Применение изменений
                     li.list-group-item
-                      a(href="/phasellus/") Загрузка
+                      a(href="/index?ws=5") Загрузка
                     li.list-group-item
-                      a(href="/cras/") Перезагрузка серверов
+                      a(href="/index?ws=6") Перезагрузка серверов
                     li.list-group-item
-                      a(href="/cras/") Передача файлов на ftp
+                      a(href="/index?ws=7") Передача файлов на ftp
 
           section.col-md-18
             .jubmotron
               blockquote
-                p “Quisque in enim velit, at dignissim est. nulla ul corper, dolor ac pellentesque placerat, justo tellus gravida erat, vel porttitor libero erat.”
-                  small John Doe, Lorem Ipsum
-      footer
-        .container
-          .row
-            .col-md-21.spacer  &nbsp;
-            .col-md-3.copy-right
-              h3 Copyright
-              p VSCraft 2016
+                table()
+                  - if (content.length)
+                    - content.forEach(function(item){
+                      tr
+                        - if (item.length)
+                          - item.forEach(function(tx){
+                            td
+                              small= tx
+                          - })
+                    - })
+
 
 
 
