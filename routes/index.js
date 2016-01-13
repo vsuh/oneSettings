@@ -42,15 +42,29 @@ router.get('/', function (req, res, next) {
         } else {
             var today = new Date();
             text.push([_tStamp(today), 'not implemented yet']);
-  
+
         }
         return text;
     }
-    res.render('index', { stage: stage, content: content() });
+    res.render('index', {
+      stage: stage,
+      content: content(),
+      infoTable: infoTable()
+    });
 });
 
-function _tStamp(tm){
-    return '<div style="white-space:nowrap;">'+tm.toLocaleDateString() + "&nbsp;" + tm.toLocaleTimeString()+'</div>'; 
+function infoTable() {
+  var regl = JSON.parse(fs.readFileSync('//kopt-app-01/com/cmd/regl.json'));
+
+  return ' \
+  <div><span class="r-cell">INFOTABLE-1</span><span class="r-cell">OK</span></div> \
+  <div><span class="r-cell">INFOTABLE-2</span><span class="r-cell">OK</span></div> \
+  <div><span class="r-cell">INFOTABLE-3</span><span class="r-cell">ERR</span></div> \
+  ';
+}
+
+function _tStamp(tm) {
+    return '<div style="white-space:nowrap;">'+tm.toLocaleDateString() + "&nbsp;" + tm.toLocaleTimeString()+'</div>';
 }
 
 router.get('/settings', function (req, res, next) {
