@@ -1,3 +1,4 @@
+
 {
     "port": 3000,
     "server": "kopt-app-01",
@@ -8,7 +9,7 @@
     ],
     "k_ibs": {
         "mc_bnu_tst": "mc_bnu",
-        "mc_bnu_pom": "mc_bnu",
+        "mc_bnu_two": "mc_bnu",
         "corp_kzp": "zupCorp",
         "mc_uat_tst": "mc_uat"
     },

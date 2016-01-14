@@ -38,13 +38,14 @@ html(lang="en-us")
                     a(href="/params") Параметры
                 li
                     a(href="/customers") Customers
-
+                      
             .heading
               - if (stage)
                   h3 Регламентные задания. Фаза #{stage}
               - else
                   h3 Регламентные задания
               br
+              
               .row
                 #infoTbl!= infoTable
                 aside.col-md-6
@@ -91,7 +92,7 @@ html(lang="en-us")
                     - else
                         li.list-group-item
                           a(href="/index?ws=7") Передача файлов на ftp
-
+                            
                 section.col-md-18
                     .jubmotron
                       blockquote
@@ -100,8 +101,11 @@ html(lang="en-us")
                               - content.forEach(function(item){
                               tr(valign="top")
                                   - if (item.length)
-                                  - item.forEach(function(tx){
+                                  - item.forEach(function(tx, ind){
                                       td
+                                        - if (ind == 1)
+                                          small.r-ib!= tx
+                                        - else
                                           small!= tx
                                   - })
                               - })
