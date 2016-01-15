@@ -12,7 +12,7 @@ var routes = require('./routes/index');
 
 var app = express();
 
-var cnf = require('./config');
+//var cnf = require('./config');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

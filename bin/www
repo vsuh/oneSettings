@@ -6,8 +6,8 @@
 
 var debug = require('debug')('server');
 var http = require('http');
-var cnf = require('../config');
-var port = cnf.stores.file.store.port;
+//var cnf = require('../config');
+var port = 3000;
 /**
  * Create HTTP server.
  */

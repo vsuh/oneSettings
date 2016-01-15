@@ -1,12 +1,12 @@
-
 {
     "port": 3000,
     "server": "kopt-app-01",
-    "w_ib": [
-        "mc_bnu",
-        "zupCorp",
-        "mc_uat"
-    ],
+    "bsdir": "//kopt-app-01/com/cmd",
+    "w_ib": {
+        "mc_bnu": "1cKucy",
+        "zupCorp": "1cCorp",
+        "mc_uat": "1cUat"
+    },
     "k_ibs": {
         "mc_bnu_tst": "mc_bnu",
         "mc_bnu_two": "mc_bnu",

@@ -3,56 +3,62 @@ var express = require('express');
 var router = express.Router();
 var fs = require("fs");
 var Iconv = require('iconv-lite');
-var cnf = require('../config');
+//var cnf = require('../config');
 var path = require('path');
+
+var debug = require('debug');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+    debug('warning!!');
+    var cnf = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/config.json'), 'utf-8'));
     var stage = req.query.ws || '1';
     var content = function () {
         var text = new Array();
-        
         if (stage == '1') {
-            var fileLog = '//kopt-app-01/com/cmd/dt23/23_b2out_mc_bnu.log';
+            var fileLog = path.join(cnf.bsdir, 'dt23/23_b2out_mc_bnu.log');
             var ctime = fs.statSync(fileLog).ctime;
-            var translated = Iconv.decode(fs.readFileSync(fileLog), 'windows1251');
-            if (!translated) {
-                translated = "Не удалось прочитать логфайл `" + fileLog + "`";
+            if (!ctime) {
+                var translated = "Файл " + fileLog + " недоступен";
+            } else {
+                var translated = Iconv.decode(fs.readFileSync(fileLog), 'windows1251');
+                if (!translated) {
+                    translated = "Не удалось прочитать логфайл `" + fileLog + "`";
+                }
             }
             text.push([_tStamp(ctime), '1cKucy', translated]);
         } else if (stage == '2') {
             var today = new Date();
             text.push([_tStamp(today), 'initialized ok']);
         } else if (stage == '3') {
-            var workIBs = JSON.parse('../config/config.json');
-            var ibs_re = '';
-            workIBs.forEach(function(val){
-                ibs_re += '|' + val;
-            });
-            ibs_re = ibs_re.substr(1);
-            var logFiles = [ ];
-            var re = RegExp(/^.*('+ibs_re+').*$/);
-            var files = fs.readdirSync('//kopt-app-01/com/cmd/log');
-            files.forEach(function (val, index, next) {
-                console.log(val+' = test = '+re.test(val))
-                if (path.extname(val) == '.log') {
-                    console.log(val);
-                }
-            });
 
-            var logFiles = [
-                '//kopt-app-01/com/cmd/log/02_out_1cCORP.dt.log',
-                '//kopt-app-01/com/cmd/log/02_out_1cKucy.dt.log',
-                '//kopt-app-01/com/cmd/log/02_out_1cUAT.dt.log'
-            ];
-            logFiles.forEach(function (fn, index, array) {
-                var ct = fs.statSync(fn).ctime;
-                var rt = 'out_(.*)\.dt.*$';
-                var re = RegExp(rt);
-                var ib = re.exec(fn);
-                var translated = Iconv.decode(fs.readFileSync(fn), 'windows1251');
-                text.push([_tStamp(ct), ib[1], translated]);
-                //    console.log(_tStamp(ct), ib[1]);
+            var ibs_re = '';
+            for (var key in cnf.w_ib) {
+                ibs_re += '|' + cnf.w_ib[key];
+            }
+            // для массива:
+            // workIBs.w_ib.forEach(function (val) {
+            //     ibs_re += '|' + val;
+            // });
+                
+            ibs_re = ibs_re.substr(1);
+            // var logFiles = [];
+            var files = fs.readdirSync(path.join(cnf.bsdir, 'log'));
+
+            var re = RegExp('^.*(' + ibs_re + ')\.dt.*$', 'i');
+            files.forEach(function (fn, index, next) {
+
+                if (re.test(fn)) {
+                    var logFile = path.join(cnf.bsdir, 'log', fn);
+                    console.log(' >>> ', logFile);
+                    var ct = fs.statSync(logFile).ctime;
+
+                    var reg = RegExp('out_(.*)\.dt.*$', 'i');
+                    var ib = reg.exec(fn);
+                    var translated = Iconv.decode(fs.readFileSync(logFile), 'windows1251');
+                    text.push([_tStamp(ct), ib[1], translated]);
+
+                }
             });
 
         } else {
