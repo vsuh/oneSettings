@@ -48,7 +48,7 @@ html(lang="en-us")
               
               .row
                 #infoTbl!= infoTable
-                aside.col-md-6
+                aside.col-md-5
                   ul.list-group.submenu
                     - if(stage == '1')
                         li.list-group-item.active
@@ -93,7 +93,7 @@ html(lang="en-us")
                         li.list-group-item
                           a(href="/index?ws=7") Передача файлов на ftp
                             
-                section.col-md-18
+                section.col-md-19
                     .jubmotron
                       blockquote
                         table.table-striped
@@ -109,7 +109,15 @@ html(lang="en-us")
                                           small!= tx
                                   - })
                               - })
-
-
+                              
+                section.col-md-19
+                    .jubmotron
+                      blockquote
+                        p= phases.length
+                        - if (phases.length)
+                            - phases.forEach(function(item){
+                              p= item  
+                            - })
+                                
 
 

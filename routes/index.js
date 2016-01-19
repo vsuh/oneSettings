@@ -5,8 +5,12 @@ var fs = require("fs");
 var Iconv = require('iconv-lite');
 //var cnf = require('../config');
 var path = require('path');
-
 var debug = require('debug');
+// var my = require('mysql-native').createTCPClient('mysql');
+// my.auto_prepare = true;
+// my.auth('db1cprod', 'v8', 'G0bl1n76');
+var mys = require('../mys');
+mys.my();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -68,10 +72,16 @@ router.get('/', function (req, res, next) {
         }
         return text;
     }
+    // var rs = getPhasesList();
+    // rs.read(function(row){
+    //     console.log(row);
+    // });
+    // console.log();
     res.render('index', {
         stage: stage,
         content: content(),
-        infoTable: infoTable()
+        infoTable: infoTable(),
+        phases: ["one", "two","three"]
     });
 });
 
@@ -120,8 +130,9 @@ function dump_rows(cmd) {
 }
 
 function getRowsFromTable() {
-    my.auth('db1cprod', 'v8', 'G0bl1n76');
-    var tt = my.query('select * from `upload_settings_chg_proto`;');
-    return tt;
+    return my.query('select * from `upload_settings_chg_proto`;');
+}
+function getPhasesList() {
+    return my.query("select `p_id`, `p_name`, `p_fullName` from `reglResult_phases` order by `p_id`");  
 }
 //dump_rows(getRowsFromTable());
