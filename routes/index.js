@@ -9,8 +9,8 @@ var debug = require('debug');
 // var my = require('mysql-native').createTCPClient('mysql');
 // my.auto_prepare = true;
 // my.auth('db1cprod', 'v8', 'G0bl1n76');
-var mys = require('../mys');
-mys.my();
+//var mys = require('../mys');
+//mys.my();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -44,7 +44,7 @@ router.get('/', function (req, res, next) {
             // workIBs.w_ib.forEach(function (val) {
             //     ibs_re += '|' + val;
             // });
-                
+
             ibs_re = ibs_re.substr(1);
             // var logFiles = [];
             var files = fs.readdirSync(path.join(cnf.bsdir, 'log'));
@@ -133,6 +133,6 @@ function getRowsFromTable() {
     return my.query('select * from `upload_settings_chg_proto`;');
 }
 function getPhasesList() {
-    return my.query("select `p_id`, `p_name`, `p_fullName` from `reglResult_phases` order by `p_id`");  
+    return my.query("select `p_id`, `p_name`, `p_fullName` from `reglResult_phases` order by `p_id`");
 }
 //dump_rows(getRowsFromTable());
