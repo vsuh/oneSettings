@@ -38,14 +38,14 @@ html(lang="en-us")
                     a(href="/params") Параметры
                 li
                     a(href="/customers") Customers
-                      
+
             .heading
               - if (stage)
                   h3 Регламентные задания. Фаза #{stage}
               - else
                   h3 Регламентные задания
               br
-              
+
               .row
                 #infoTbl!= infoTable
                 aside.col-md-5
@@ -92,7 +92,7 @@ html(lang="en-us")
                     - else
                         li.list-group-item
                           a(href="/index?ws=7") Передача файлов на ftp
-                            
+
                 section.col-md-19
                     .jubmotron
                       blockquote
@@ -109,15 +109,16 @@ html(lang="en-us")
                                           small!= tx
                                   - })
                               - })
-                              
+
                 section.col-md-19
                     .jubmotron
                       blockquote
-                        p= phases.length
-                        - if (phases.length)
-                            - phases.forEach(function(item){
-                              p= item  
-                            - })
-                                
+                        if(phases)
+                          p= phases.length
+                            - if (phases.length)
+                              - phases.forEach(function(item){
+                                p= item
+                              - })
+
 
 

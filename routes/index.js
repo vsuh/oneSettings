@@ -7,10 +7,15 @@ var Iconv = require('iconv-lite');
 var path = require('path');
 var debug = require('debug');
 var mydb = require('mysql');
-// my.auto_prepare = true;
-// my.auth('db1cprod', 'v8', 'G0bl1n76');
-//var mys = require('../mys');
-//mys.my();
+var conn = mydb.createConnection({
+    host: "mysql",
+    user: "v8",
+    password: "G0bl1n76",
+    stringifyObjects: true,
+    charset: "utf8mb4_general_ci",
+    database: "db1cprod"
+});
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -40,18 +45,12 @@ router.get('/', function (req, res, next) {
             for (var key in cnf.w_ib) {
                 ibs_re += '|' + cnf.w_ib[key];
             }
-            // для массива:
-            // workIBs.w_ib.forEach(function (val) {
-            //     ibs_re += '|' + val;
-            // });
 
             ibs_re = ibs_re.substr(1);
-            // var logFiles = [];
             var files = fs.readdirSync(path.join(cnf.bsdir, 'log'));
 
             var re = RegExp('^.*(' + ibs_re + ')\.dt.*$', 'i');
             files.forEach(function (fn, index, next) {
-
                 if (re.test(fn)) {
                     var logFile = path.join(cnf.bsdir, 'log', fn);
                     console.log(' >>> ', logFile);
@@ -61,7 +60,6 @@ router.get('/', function (req, res, next) {
                     var ib = reg.exec(fn);
                     var translated = Iconv.decode(fs.readFileSync(logFile), 'windows1251');
                     text.push([_tStamp(ct), ib[1], translated]);
-
                 }
             });
 
@@ -73,71 +71,68 @@ router.get('/', function (req, res, next) {
         return text;
     }
 
-    var phases = getPhaseList();
-    // var m = function () {
-    //     var conn = mydb.createConnection({
-    //         host: "mysql",
-    //         user: "v8",
-    //         password: "G0bl1n76",
-    //         stringifyObjects: true,
-    //         charset: "utf8mb4_general_ci",
-    //         database: "db1cprod"
-    //     });
-    //     var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
-    //     // var __ret = [];
-    //     conn.connect(function (err) {
-    //         if (err) {
-    //             console.error('error mysql connecting: ' + err.stack);
-    //             return;
-    //         }
-    //     });
-    //     conn.query(sql, function (err, rows, fields) {
-    //         if (err) throw err;
-    //         rows.forEach(function (val, i) {
-    //             phases.push(val.p_fullName);
-    //         });
-    //     });
-    //     conn.end();
-    //     // return __ret;
-    // };
-    var suh = require('../mys');
-    console.log("kkk", phases, suh);
-    
-    res.render('index', {
-        stage: stage,
-        content: content(),
-        infoTable: infoTable(),
-        phases: phases
-    });
-});
-
-function getPhaseList() {
-    var conn = mydb.createConnection({
-        host: "mysql",
-        user: "v8",
-        password: "G0bl1n76",
-        stringifyObjects: true,
-        charset: "utf8mb4_general_ci",
-        database: "db1cprod"
-    });
-    var __ret = [];
-    conn.connect(function (err) {
+  conn.connect(function (err) {
         if (err) {
             console.error('error mysql connecting: ' + err.stack);
             return;
         }
     });
     var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
+    var pu = conn.query(sql, function (err, rows, fields) {
+      var __ret = [];
+       if (err) throw err;
+         rows.forEach(function (val, i) {
+           __ret.push(val.p_fullName);
+           console.log("## "+val.p_fullName);
+       });
+         return __ret;
+    });
+
+    res.render('index', {
+      stage: stage,
+      content: content(),
+      infoTable: infoTable(),
+      phases: getPhaseList()
+      // function ()
+      // {
+      //   conn.connect(function (err) {
+      //     if (err) {
+      //       console.error('error mysql connecting: ' + err.stack);
+      //       return;
+      //     }
+      //   });
+      //   var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
+      //   conn.query(sql, function (err, rows, fields) {
+      //     if (err) throw err;
+      //     conn.end();
+      //     return rows;
+      //     //  rows.forEach(function (val, i) {
+      //     //      __ret.push(val.p_fullName);
+      //     //  });
+      //   });
+
+      // }
+    });
+});
+
+function getPhaseList() {
+  var __ret = [];
+
+    conn.connect(function (err) {
+        if (err) {
+            throw 'error mysql connecting: ' + err.stack;
+            return;
+        }
+    });
+    var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
      conn.query(sql, function (err, rows, fields) {
-         if (err) throw err;
-         return rows;
-        //  rows.forEach(function (val, i) {
-        //      __ret.push(val.p_fullName);
-        //  });
-     });
-
-
-
+//       if (err) throw err;
+         rows.forEach(function (val, i) {
+           __ret.push(val.p_fullName);
+           console.log("## "+val.p_fullName);
+         });
+    });
+     return __ret;
 }
 
 function infoTable() {
