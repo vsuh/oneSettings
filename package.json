@@ -12,6 +12,7 @@
     "logger": "0.0.1",
     "markdown-js": "0.0.3",
     "morgan": "~1.6.1",
+    "mysql": "^2.10.2",
     "mysql-native": "^0.4.7",
     "nconf": "^0.8.2",
     "path": "^0.12.7",

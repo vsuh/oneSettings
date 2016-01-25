@@ -6,7 +6,7 @@ var Iconv = require('iconv-lite');
 //var cnf = require('../config');
 var path = require('path');
 var debug = require('debug');
-// var my = require('mysql-native').createTCPClient('mysql');
+var mydb = require('mysql');
 // my.auto_prepare = true;
 // my.auth('db1cprod', 'v8', 'G0bl1n76');
 //var mys = require('../mys');
@@ -72,23 +72,78 @@ router.get('/', function (req, res, next) {
         }
         return text;
     }
-    // var rs = getPhasesList();
-    // rs.read(function(row){
-    //     console.log(row);
-    // });
-    // console.log();
+
+    var phases = getPhaseList();
+    // var m = function () {
+    //     var conn = mydb.createConnection({
+    //         host: "mysql",
+    //         user: "v8",
+    //         password: "G0bl1n76",
+    //         stringifyObjects: true,
+    //         charset: "utf8mb4_general_ci",
+    //         database: "db1cprod"
+    //     });
+    //     var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
+    //     // var __ret = [];
+    //     conn.connect(function (err) {
+    //         if (err) {
+    //             console.error('error mysql connecting: ' + err.stack);
+    //             return;
+    //         }
+    //     });
+    //     conn.query(sql, function (err, rows, fields) {
+    //         if (err) throw err;
+    //         rows.forEach(function (val, i) {
+    //             phases.push(val.p_fullName);
+    //         });
+    //     });
+    //     conn.end();
+    //     // return __ret;
+    // };
+    var suh = require('../mys');
+    console.log("kkk", phases, suh);
+    
     res.render('index', {
         stage: stage,
         content: content(),
         infoTable: infoTable(),
-        phases: ["one", "two","three"]
+        phases: phases
     });
 });
+
+function getPhaseList() {
+    var conn = mydb.createConnection({
+        host: "mysql",
+        user: "v8",
+        password: "G0bl1n76",
+        stringifyObjects: true,
+        charset: "utf8mb4_general_ci",
+        database: "db1cprod"
+    });
+    var __ret = [];
+    conn.connect(function (err) {
+        if (err) {
+            console.error('error mysql connecting: ' + err.stack);
+            return;
+        }
+    });
+    var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
+     conn.query(sql, function (err, rows, fields) {
+         if (err) throw err;
+         return rows;
+        //  rows.forEach(function (val, i) {
+        //      __ret.push(val.p_fullName);
+        //  });
+     });
+
+
+
+}
 
 function infoTable() {
     var fn = '//kopt-app-01/com/cmd/regl.json';
     var plText = fs.readFileSync(fn, 'utf-8');
-
+    // отрезание BOM символа
     if (plText.charCodeAt(0) == '65279') plText = plText.substr(1);
     var regl = JSON.parse(plText);
     var today = '&nbsp;&nbsp;[ ' + regl.Today.substring(0, 10) + ' ]&nbsp;&nbsp;';
