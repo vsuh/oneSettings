@@ -8,181 +8,156 @@ var path = require('path');
 var debug = require('debug');
 var mydb = require('mysql');
 var conn = mydb.createConnection({
-    host: "mysql",
-    user: "v8",
-    password: "G0bl1n76",
-    stringifyObjects: true,
-    charset: "utf8mb4_general_ci",
-    database: "db1cprod"
+  host: "mysql",
+  user: "v8",
+  password: "G0bl1n76",
+  stringifyObjects: true,
+  charset: "utf8mb4_general_ci",
+  database: "db1cprod",
+  multipleStatements: true
 });
 
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    debug('warning!!');
-    var cnf = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/config.json'), 'utf-8'));
-    var stage = req.query.ws || '1';
-    var content = function () {
-        var text = new Array();
-        if (stage == '1') {
-            var fileLog = path.join(cnf.bsdir, 'dt23/23_b2out_mc_bnu.log');
-            var ctime = fs.statSync(fileLog).ctime;
-            if (!ctime) {
-                var translated = "Файл " + fileLog + " недоступен";
-            } else {
-                var translated = Iconv.decode(fs.readFileSync(fileLog), 'windows1251');
-                if (!translated) {
-                    translated = "Не удалось прочитать логфайл `" + fileLog + "`";
-                }
-            }
-            text.push([_tStamp(ctime), '1cKucy', translated]);
-        } else if (stage == '2') {
-            var today = new Date();
-            text.push([_tStamp(today), 'initialized ok']);
-        } else if (stage == '3') {
-
-            var ibs_re = '';
-            for (var key in cnf.w_ib) {
-                ibs_re += '|' + cnf.w_ib[key];
-            }
-
-            ibs_re = ibs_re.substr(1);
-            var files = fs.readdirSync(path.join(cnf.bsdir, 'log'));
-
-            var re = RegExp('^.*(' + ibs_re + ')\.dt.*$', 'i');
-            files.forEach(function (fn, index, next) {
-                if (re.test(fn)) {
-                    var logFile = path.join(cnf.bsdir, 'log', fn);
-                    console.log(' >>> ', logFile);
-                    var ct = fs.statSync(logFile).ctime;
-
-                    var reg = RegExp('out_(.*)\.dt.*$', 'i');
-                    var ib = reg.exec(fn);
-                    var translated = Iconv.decode(fs.readFileSync(logFile), 'windows1251');
-                    text.push([_tStamp(ct), ib[1], translated]);
-                }
-            });
-
-        } else {
-            var today = new Date();
-            text.push([_tStamp(today), 'not implemented yet']);
-
+  debug('warning!!');
+  var cnf = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/config.json'), 'utf-8'));
+  var stage = req.query.ws || '1';
+  var content = function () {
+    var text = new Array();
+    if (stage == '1') {
+      var fileLog = path.join(cnf.bsdir, 'dt23/23_b2out_mc_bnu.log');
+      var ctime = fs.statSync(fileLog).ctime;
+      if (!ctime) {
+        var translated = "Файл " + fileLog + " недоступен";
+      } else {
+        var translated = Iconv.decode(fs.readFileSync(fileLog), 'windows1251');
+        if (!translated) {
+          translated = "Не удалось прочитать логфайл `" + fileLog + "`";
         }
-        return text;
+      }
+      text.push([_tStamp(ctime), '1cKucy', translated]);
+    } else if (stage == '2') {
+      var today = new Date();
+      text.push([_tStamp(today), 'initialized ok']);
+    } else if (stage == '3') {
+
+      var ibs_re = '';
+      for (var key in cnf.w_ib) {
+        ibs_re += '|' + cnf.w_ib[key];
+      }
+
+      ibs_re = ibs_re.substr(1);
+      var files = fs.readdirSync(path.join(cnf.bsdir, 'log'));
+
+      var re = RegExp('^.*(' + ibs_re + ')\.dt.*$', 'i');
+      files.forEach(function (fn, index, next) {
+        if (re.test(fn)) {
+          var logFile = path.join(cnf.bsdir, 'log', fn);
+          console.log(' >>> ', logFile);
+          var ct = fs.statSync(logFile).ctime;
+
+          var reg = RegExp('out_(.*)\.dt.*$', 'i');
+          var ib = reg.exec(fn);
+          var translated = Iconv.decode(fs.readFileSync(logFile), 'windows1251');
+          text.push([_tStamp(ct), ib[1], translated]);
+        }
+      });
+
+    } else {
+      var today = new Date();
+      text.push([_tStamp(today), 'not implemented yet']);
+
     }
-
-  conn.connect(function (err) {
-        if (err) {
-            console.error('error mysql connecting: ' + err.stack);
-            return;
-        }
-    });
-    var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
-    var pu = conn.query(sql, function (err, rows, fields) {
-      var __ret = [];
-       if (err) throw err;
-         rows.forEach(function (val, i) {
-           __ret.push(val.p_fullName);
-           console.log("## "+val.p_fullName);
-       });
-         return __ret;
-    });
-
+    return text;
+  }
+   
+  var today = '2016-01-19';  
+  var sql = "SELECT `p_id`,`p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;"
+  + "SELECT * FROM  `reglResult` WHERE DATE_FORMAT(  `r_time` ,  '%Y-%m-%d' ) =  '"+today+"' AND `r_phase` = '"+stage+"';";
+  // console.log(sql);
+  conn.query(sql, function selectCb(err, phases, fields) {
+    if (err) throw err;
+    // console.log(phases[1]);
     res.render('index', {
       stage: stage,
-      content: content(),
+      content: phases[1],
       infoTable: infoTable(),
-      phases: getPhaseList()
-      // function ()
-      // {
-      //   conn.connect(function (err) {
-      //     if (err) {
-      //       console.error('error mysql connecting: ' + err.stack);
-      //       return;
-      //     }
-      //   });
-      //   var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
-      //   conn.query(sql, function (err, rows, fields) {
-      //     if (err) throw err;
-      //     conn.end();
-      //     return rows;
-      //     //  rows.forEach(function (val, i) {
-      //     //      __ret.push(val.p_fullName);
-      //     //  });
-      //   });
-
-      // }
+      phases: phases[0]
     });
+  });
+    // conn.end();
+
 });
 
 function getPhaseList() {
   var __ret = [];
 
-    conn.connect(function (err) {
-        if (err) {
-            throw 'error mysql connecting: ' + err.stack;
-            return;
-        }
+  conn.connect(function (err) {
+    if (err) {
+      throw 'error mysql connecting: ' + err.stack;
+      return;
+    }
+  });
+  var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
+  conn.query(sql, function (err, rows, fields) {
+    //       if (err) throw err;
+    rows.forEach(function (val, i) {
+      __ret.push(val.p_fullName);
+      console.log("## " + val.p_fullName);
     });
-    var sql = "SELECT `p_fullName` FROM  `reglResult_phases` ORDER BY  `p_id`;";
-     conn.query(sql, function (err, rows, fields) {
-//       if (err) throw err;
-         rows.forEach(function (val, i) {
-           __ret.push(val.p_fullName);
-           console.log("## "+val.p_fullName);
-         });
-    });
-     return __ret;
+  });
+  return __ret;
 }
 
 function infoTable() {
-    var fn = '//kopt-app-01/com/cmd/regl.json';
-    var plText = fs.readFileSync(fn, 'utf-8');
-    // отрезание BOM символа
-    if (plText.charCodeAt(0) == '65279') plText = plText.substr(1);
-    var regl = JSON.parse(plText);
-    var today = '&nbsp;&nbsp;[ ' + regl.Today.substring(0, 10) + ' ]&nbsp;&nbsp;';
-    var infoTable = '<table class="tbl-regl-total">';
-    regl.Result.forEach(function (val, ind, next) {
-        infoTable += '<tr class="table-row"> \
+  var fn = '//kopt-app-01/com/cmd/regl.json';
+  var plText = fs.readFileSync(fn, 'utf-8');
+  // отрезание BOM символа
+  if (plText.charCodeAt(0) == '65279') plText = plText.substr(1);
+  var regl = JSON.parse(plText);
+  var today = '&nbsp;&nbsp;[ ' + regl.Today.substring(0, 10) + ' ]&nbsp;&nbsp;';
+  var infoTable = '<table class="tbl-regl-total">';
+  regl.Result.forEach(function (val, ind, next) {
+    infoTable += '<tr class="table-row"> \
                 <td class="r-cell r-ib">' + val.wib + '</td> \
                 <td class="r-cell">' + val.oko + '</td> \
                 <td class="r-cell r-ib">' + val.cib + '</td> \
                 <td class="r-cell">' + val.oki + '</td> \
                 </tr>';
-    });
-    return infoTable + '</table><div id="date-regl">' + today + '</div>';
+  });
+  return infoTable + '</table><div id="date-regl">' + today + '</div>';
 }
 
 function _tStamp(tm) {
-    return '<div style="white-space:nowrap;">' + tm.toLocaleDateString() + "&nbsp;" + tm.toLocaleTimeString() + '</div>';
+  return '<div style="white-space:nowrap;">' + tm.toLocaleDateString() + "&nbsp;" + tm.toLocaleTimeString() + '</div>';
 }
 
 router.get('/settings', function (req, res, next) {
-    res.render('settings', { title: 'Express' });
+  res.render('settings', { title: 'Express' });
 });
 
 
 router.get('/params', function (req, res, next) {
-    res.render('params', { title: 'Express' });
+  res.render('params', { title: 'Express' });
 });
 
 
 router.get('/customers', function (req, res, next) {
-    res.render('customers', { title: 'Express' });
+  res.render('customers', { title: 'Express' });
 });
 
 
 module.exports = router;
 //// *** *** *** ////
 function dump_rows(cmd) {
-    cmd.addListener('row', function (r) { console.dir(r); });
+  cmd.addListener('row', function (r) { console.dir(r); });
 }
 
 function getRowsFromTable() {
-    return my.query('select * from `upload_settings_chg_proto`;');
+  return my.query('select * from `upload_settings_chg_proto`;');
 }
 function getPhasesList() {
-    return my.query("select `p_id`, `p_name`, `p_fullName` from `reglResult_phases` order by `p_id`");
+  return my.query("select `p_id`, `p_name`, `p_fullName` from `reglResult_phases` order by `p_id`");
 }
 //dump_rows(getRowsFromTable());

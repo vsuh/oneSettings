@@ -48,77 +48,26 @@ html(lang="en-us")
 
               .row
                 #infoTbl!= infoTable
-                aside.col-md-5
+                aside.col-md-8
                   ul.list-group.submenu
-                    - if(stage == '1')
-                        li.list-group-item.active
-                          a(href="/index?ws=1") Выгрузка в 23:00
-                    - else
-                        li.list-group-item
-                          a(href="/index?ws=1") Выгрузка в 23:00
-                    - if(stage == '2')
-                        li.list-group-item.active
-                          a(href="/index?ws=2") Инициализация
-                    - else
-                        li.list-group-item
-                          a(href="/index?ws=2") Инициализация
-                    - if(stage == '3')
-                        li.list-group-item.active
-                          a(href="/index?ws=3") Выгрузка рабочих ИБ
-                    - else
-                        li.list-group-item
-                          a(href="/index?ws=3") Выгрузка рабочих ИБ
-                    - if(stage == '4')
-                        li.list-group-item.active
-                          a(href="/index?ws=4") Применение изменений
-                    - else
-                        li.list-group-item
-                          a(href="/index?ws=4") Применение изменений
-                    - if(stage == '5')
-                        li.list-group-item.active
-                          a(href="/index?ws=5") Загрузка
-                    - else
-                        li.list-group-item
-                          a(href="/index?ws=5") Загрузка
-                    - if(stage == '6')
-                        li.list-group-item.active
-                          a(href="/index?ws=6") Перезагрузка серверов
-                    - else
-                        li.list-group-item
-                          a(href="/index?ws=6") Перезагрузка серверов
-                    - if(stage == '7')
-                        li.list-group-item.active
-                          a(href="/index?ws=7") Передача файлов на ftp
-                    - else
-                        li.list-group-item
-                          a(href="/index?ws=7") Передача файлов на ftp
+                    if(phases)
+                      - if (phases.length)
+                        - phases.forEach(function(item){
+                          - if(stage == item.p_id)
+                            li.list-group-item.active
+                              a(href="/index?ws="+item.p_id) #{item.p_fullName}
+                          - else
+                            li.list-group-item
+                              a(href="/index?ws="+item.p_id) #{item.p_fullName}
+                        - })
 
-                section.col-md-19
+                section.col-md-16
                     .jubmotron
                       blockquote
                         table.table-striped
                           - if (content.length)
                               - content.forEach(function(item){
-                              tr(valign="top")
-                                  - if (item.length)
-                                  - item.forEach(function(tx, ind){
-                                      td
-                                        - if (ind == 1)
-                                          small.r-ib!= tx
-                                        - else
-                                          small!= tx
-                                  - })
+                                tr(valign="top")
+                                  td.small= item.r_time.toDateString()
+                                  td.small= item.r_string 
                               - })
-
-                section.col-md-19
-                    .jubmotron
-                      blockquote
-                        if(phases)
-                          p= phases.length
-                            - if (phases.length)
-                              - phases.forEach(function(item){
-                                p= item
-                              - })
-
-
-
